@@ -1,0 +1,54 @@
+#include <Wire.h>
+#include <LiquidCrystal.h>
+
+// Pin definitions for pulse sensor and temperature sensor
+const int pulsePin = A0;  // Analog pin for pulse sensor
+const int tempPin = A1;   // Analog pin for temperature sensor
+
+// Initialize the LiquidCrystal library with the numbers of the interface pins
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+  // Set up the LCD's number of columns and rows:
+  lcd.begin(16, 2);
+
+  // Print initial message on LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Pulse and Temp");
+  lcd.setCursor(0, 1);
+  lcd.print("Sensor Readings");
+
+  // Initialize serial communication
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Read pulse sensor value
+  int pulseValue = analogRead(pulsePin);
+
+  // Read temperature sensor value
+  int tempValue = analogRead(tempPin);
+  float voltage = tempValue * 5.0 / 1024.0;
+  float temperatureC = (voltage - 0.5) * 100.0;
+
+  // Display pulse and temperature values on LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Pulse: ");
+  lcd.print(pulseValue);
+
+  lcd.setCursor(0, 1);
+  lcd.print("Temp: ");
+  lcd.print(temperatureC);
+  lcd.print(" C");
+
+  // Print pulse and temperature values to serial monitor
+  Serial.print("Pulse: ");
+  Serial.println(pulseValue);
+  Serial.print("Temperature: ");
+  Serial.print(temperatureC);
+  Serial.println(" C");
+
+  delay(1000); // Delay for readability
+}
